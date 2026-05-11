@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { FileUp, FileText, Check, AlertCircle, ArrowRight, ArrowLeft, RotateCcw } from 'lucide-react'
+import { FileUp, FileText, Check, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react'
 import { parseCsv, autoCategorize, type CsvRow, type ColumnMapping } from '@/lib/csv-parser'
 import { getAllCategories, addTransaction } from '@/lib/db'
 import { formatCurrency } from '@/lib/utils'
@@ -155,46 +155,48 @@ export function CsvImportModal({ open, onClose, onImported }: CsvImportModalProp
       )}
 
       {step === 'mapping' && (
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <FileText size={16} className="text-emerald-500" />
-            <span className="text-sm font-medium text-gray-700 truncate">{fileName}</span>
-            <Badge>{parsedRows.length} 行</Badge>
-          </div>
-
-          <p className="text-sm text-gray-500">请确认以下列映射是否正确，可手动调整：</p>
-
-          <div className="flex flex-col gap-2.5">
-            <MappingRow label="日期列" headers={headers} value={mapping.date || ''} onChange={v => setMapping(p => ({ ...p, date: v }))} />
-            <MappingRow label="描述列" headers={headers} value={mapping.description || ''} onChange={v => setMapping(p => ({ ...p, description: v }))} />
-            <MappingRow label="金额列" headers={headers} value={mapping.amount || ''} onChange={v => setMapping(p => ({ ...p, amount: v }))} />
-            <MappingRow label="收支列" headers={headers} value={mapping.type || ''} onChange={v => setMapping(p => ({ ...p, type: v }))} optional />
-            <MappingRow label="支出列" headers={headers} value={mapping.expense || ''} onChange={v => setMapping(p => ({ ...p, expense: v }))} optional />
-            <MappingRow label="收入列" headers={headers} value={mapping.income || ''} onChange={v => setMapping(p => ({ ...p, income: v }))} optional />
-          </div>
-
-          {/* Preview */}
-          <div className="glass rounded-xl p-3 max-h-40 overflow-y-auto">
-            <p className="text-xs font-medium text-gray-500 mb-2">数据预览：</p>
-            {parsedRows.slice(0, 5).map((row, i) => (
-              <div key={i} className="flex items-center gap-2 text-xs text-gray-600 py-1 border-b border-white/10 last:border-0">
-                <span className="text-gray-400 w-20 truncate">{row.date || '??'}</span>
-                <span className="flex-1 truncate">{row.description}</span>
-                <span className={`font-medium tabular-nums ${row.type === 'expense' ? 'text-rose-500' : 'text-emerald-500'}`}>
-                  {row.type === 'expense' ? '-' : '+'}{formatCurrency(row.amount)}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {error && (
-            <div className="flex items-center gap-2 bg-rose-500/15 text-rose-700 rounded-xl px-4 py-2.5 text-sm">
-              <AlertCircle size={16} />
-              {error}
+        <div className="flex flex-col gap-4 h-full min-h-0">
+          <div className="flex-1 overflow-y-auto min-h-0 space-y-4 pr-1 -mr-1">
+            <div className="flex items-center gap-2">
+              <FileText size={16} className="text-emerald-500" />
+              <span className="text-sm font-medium text-gray-700 truncate">{fileName}</span>
+              <Badge>{parsedRows.length} 行</Badge>
             </div>
-          )}
 
-          <div className="flex gap-2">
+            <p className="text-sm text-gray-500">请确认以下列映射是否正确，可手动调整：</p>
+
+            <div className="flex flex-col gap-2.5">
+              <MappingRow label="日期列" headers={headers} value={mapping.date || ''} onChange={v => setMapping(p => ({ ...p, date: v }))} />
+              <MappingRow label="描述列" headers={headers} value={mapping.description || ''} onChange={v => setMapping(p => ({ ...p, description: v }))} />
+              <MappingRow label="金额列" headers={headers} value={mapping.amount || ''} onChange={v => setMapping(p => ({ ...p, amount: v }))} />
+              <MappingRow label="收支列" headers={headers} value={mapping.type || ''} onChange={v => setMapping(p => ({ ...p, type: v }))} optional />
+              <MappingRow label="支出列" headers={headers} value={mapping.expense || ''} onChange={v => setMapping(p => ({ ...p, expense: v }))} optional />
+              <MappingRow label="收入列" headers={headers} value={mapping.income || ''} onChange={v => setMapping(p => ({ ...p, income: v }))} optional />
+            </div>
+
+            {/* Preview */}
+            <div className="glass rounded-xl p-3 max-h-40 overflow-y-auto">
+              <p className="text-xs font-medium text-gray-500 mb-2">数据预览：</p>
+              {parsedRows.slice(0, 5).map((row, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs text-gray-600 py-1 border-b border-white/10 last:border-0">
+                  <span className="text-gray-400 w-20 truncate">{row.date || '??'}</span>
+                  <span className="flex-1 truncate">{row.description}</span>
+                  <span className={`font-medium tabular-nums ${row.type === 'expense' ? 'text-rose-500' : 'text-emerald-500'}`}>
+                    {row.type === 'expense' ? '-' : '+'}{formatCurrency(row.amount)}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {error && (
+              <div className="flex items-center gap-2 bg-rose-500/15 text-rose-700 rounded-xl px-4 py-2.5 text-sm">
+                <AlertCircle size={16} />
+                {error}
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-2 flex-shrink-0 pt-1">
             <Button variant="ghost" onClick={() => setStep('upload')} className="flex items-center gap-1.5">
               <ArrowLeft size={16} /> 返回
             </Button>
@@ -206,62 +208,64 @@ export function CsvImportModal({ open, onClose, onImported }: CsvImportModalProp
       )}
 
       {step === 'preview' && (
-        <div className="flex flex-col gap-4">
-          <div className="glass rounded-2xl p-4">
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div>
-                <div className="text-2xl font-bold text-gray-800">{parsedRows.length}</div>
-                <div className="text-xs text-gray-500">总笔数</div>
+        <div className="flex flex-col gap-4 h-full min-h-0">
+          <div className="flex-1 overflow-y-auto min-h-0 space-y-4 pr-1 -mr-1">
+            <div className="glass rounded-2xl p-4">
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div>
+                  <div className="text-2xl font-bold text-gray-800">{parsedRows.length}</div>
+                  <div className="text-xs text-gray-500">总笔数</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-rose-500">{expenseCount}</div>
+                  <div className="text-xs text-gray-500">支出</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-emerald-500">{incomeCount}</div>
+                  <div className="text-xs text-gray-500">收入</div>
+                </div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-rose-500">{expenseCount}</div>
-                <div className="text-xs text-gray-500">支出</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-emerald-500">{incomeCount}</div>
-                <div className="text-xs text-gray-500">收入</div>
-              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-gray-600">默认分类</label>
+              <p className="text-xs text-gray-400">未自动匹配分类的交易将使用以下默认分类</p>
+              <select
+                value={selectedCategory}
+                onChange={e => setSelectedCategory(e.target.value)}
+                className="glass-input rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-emerald-400/50"
+              >
+                <option value="">自动识别分类（推荐）</option>
+                {categories.filter(c => c.type === 'expense').map(c => (
+                  <option key={c.id} value={c.id}>支出 - {c.name}</option>
+                ))}
+                {categories.filter(c => c.type === 'income').map(c => (
+                  <option key={c.id} value={c.id}>收入 - {c.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Full list */}
+            <div className="max-h-52 overflow-y-auto glass rounded-xl p-2">
+              {parsedRows.map((row, i) => {
+                const matchedCat = autoCategorize(row.description)
+                const catName = categories.find(c => c.id === (selectedCategory || matchedCat || 'other-expense'))?.name || '其他'
+                return (
+                  <div key={i} className="flex items-center gap-2 py-1.5 px-2 text-xs border-b border-white/10 last:border-0">
+                    <span className="text-gray-400 w-16 shrink-0">{row.date?.slice(5) || '??-??'}</span>
+                    <span className="flex-1 truncate text-gray-700">{row.description || '(无描述)'}</span>
+                    <Badge variant={row.type === 'expense' ? 'danger' : 'success'}>{row.type === 'expense' ? '支出' : '收入'}</Badge>
+                    <span className="text-gray-400 w-12 text-right truncate">{catName}</span>
+                    <span className={`font-medium tabular-nums w-20 text-right ${row.type === 'expense' ? 'text-rose-500' : 'text-emerald-500'}`}>
+                      {formatCurrency(row.amount)}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-600">默认分类</label>
-            <p className="text-xs text-gray-400">未自动匹配分类的交易将使用以下默认分类</p>
-            <select
-              value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}
-              className="glass-input rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-emerald-400/50"
-            >
-              <option value="">自动识别分类（推荐）</option>
-              {categories.filter(c => c.type === 'expense').map(c => (
-                <option key={c.id} value={c.id}>支出 - {c.name}</option>
-              ))}
-              {categories.filter(c => c.type === 'income').map(c => (
-                <option key={c.id} value={c.id}>收入 - {c.name}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Full list */}
-          <div className="max-h-52 overflow-y-auto glass rounded-xl p-2">
-            {parsedRows.map((row, i) => {
-              const matchedCat = autoCategorize(row.description)
-              const catName = categories.find(c => c.id === (selectedCategory || matchedCat || 'other-expense'))?.name || '其他'
-              return (
-                <div key={i} className="flex items-center gap-2 py-1.5 px-2 text-xs border-b border-white/10 last:border-0">
-                  <span className="text-gray-400 w-16 shrink-0">{row.date?.slice(5) || '??-??'}</span>
-                  <span className="flex-1 truncate text-gray-700">{row.description || '(无描述)'}</span>
-                  <Badge variant={row.type === 'expense' ? 'danger' : 'success'}>{row.type === 'expense' ? '支出' : '收入'}</Badge>
-                  <span className="text-gray-400 w-12 text-right truncate">{catName}</span>
-                  <span className={`font-medium tabular-nums w-20 text-right ${row.type === 'expense' ? 'text-rose-500' : 'text-emerald-500'}`}>
-                    {formatCurrency(row.amount)}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0 pt-1">
             <Button variant="ghost" onClick={() => setStep('mapping')} className="flex items-center gap-1.5">
               <ArrowLeft size={16} /> 返回
             </Button>
