@@ -1,6 +1,7 @@
 'use client'
 
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 
@@ -12,6 +13,10 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children }: ModalProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
@@ -21,10 +26,12 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  return (
+  if (!mounted) return null
+
+  return createPortal(
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -53,6 +60,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   )
 }
