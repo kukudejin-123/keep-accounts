@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest jizhangHelper --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)",
+      "Bash(mv \"/d/java_study/cc/jizhangHelper\" \"/d/java_study/cc/jizhang-helper-temp\")",
+      "Bash(npx create-next-app@latest jizhang-helper --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm -y)",
+      "Bash(cp -r tempjz/* tempjz/.* /d/java_study/cc/jizhangHelper/)",
+      "Bash(rm -rf tempjz)",
+      "Bash(cp tempjz/package.json tempjz/package-lock.json tempjz/tsconfig.json tempjz/postcss.config.mjs tempjz/.gitignore tempjz/README.md \"/d/java_study/cc/jizhangHelper/\")",
+      "Bash(cp -r tempjz/public/* \"/d/java_study/cc/jizhangHelper/public/\")",
+      "Bash(cp -r tempjz/src/* \"/d/java_study/cc/jizhangHelper/src/\")",
+      "Bash(cp -r tempjz/.git \"/d/java_study/cc/jizhangHelper/\")",
+      "Bash(mkdir -p \"/d/java_study/cc/jizhangHelper/public\" \"/d/java_study/cc/jizhangHelper/src/app\" \"/d/java_study/cc/jizhangHelper/.git\")",
+      "Bash(cp \"/d/java_study/cc/tempjz/package.json\" \"/d/java_study/cc/tempjz/package-lock.json\" \"/d/java_study/cc/tempjz/tsconfig.json\" \"/d/java_study/cc/tempjz/postcss.config.mjs\" \"/d/java_study/cc/tempjz/.gitignore\" \"/d/java_study/cc/tempjz/README.md\" \"/d/java_study/cc/jizhangHelper/\")",
+      "Bash(cp -r \"/d/java_study/cc/tempjz/public/\" \"/d/java_study/cc/jizhangHelper/\")",
+      "Bash(cp -r \"/d/java_study/cc/tempjz/src/\" \"/d/java_study/cc/jizhangHelper/\")",
+      "Bash(cp -r \"/d/java_study/cc/tempjz/.git\" \"/d/java_study/cc/jizhangHelper/\")",
+      "Bash(npm install *)",
+      "Bash(npx next *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(node -e ' *)",
+      "Bash(npm ls *)",
+      "Bash(npx tsx *)",
+      "Bash(mkdir -p \"/d/java_study/cc/jizhangHelper/tmp\")",
+      "Bash(cat)",
+      "Bash(node -e \"require\\('./electron/main.js'\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(npx cap *)",
+      "Read(//c/Users/金能益/AppData/Local/Android/**)",
+      "Read(//c/Android/**)",
+      "Read(//c/Program Files/**)",
+      "Bash(npm run *)",
+      "Bash(gh auth *)",
+      "WebFetch(domain:github.com)",
+      "Bash(git add *)"
+    ]
+  }
+}
